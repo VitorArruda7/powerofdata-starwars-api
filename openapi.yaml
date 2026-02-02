@@ -1,0 +1,80 @@
+swagger: "2.0"
+info:
+  title: "Star Wars API"
+  version: "1.0.0"
+  description: "REST API for Star Wars data (SWAPI integration)"
+host: "starwars-gateway-xxxxx.cloud.goog"
+schemes:
+  - "https"
+paths:
+  /v1/search:
+    get:
+      summary: "Search Star Wars resources"
+      operationId: "search"
+      parameters:
+        - name: "resource"
+          in: "query"
+          description: "Resource type (people, planets, starships, films)"
+          required: true
+          type: "string"
+        - name: "name"
+          in: "query"
+          description: "Filter by name (case-insensitive)"
+          type: "string"
+        - name: "sort_by"
+          in: "query"
+          description: "Field to sort by"
+          type: "string"
+        - name: "sort_order"
+          in: "query"
+          description: "Sort order (asc or desc)"
+          type: "string"
+          default: "asc"
+        - name: "page"
+          in: "query"
+          description: "Page number (requires page_size)"
+          type: "integer"
+        - name: "page_size"
+          in: "query"
+          description: "Items per page"
+          type: "integer"
+      responses:
+        200:
+          description: "Successful search"
+        400:
+          description: "Bad request"
+        401:
+          description: "Unauthorized"
+      x-google-backend:
+        address: "https://us-central1-project-8f091ae7-8a3a-4e14-a6e.cloudfunctions.net/starwars-function"
+        disable_auth: true
+
+  /v1/films/{film_id}/characters:
+    get:
+      summary: "Get characters from a specific film"
+      operationId: "filmCharacters"
+      parameters:
+        - name: "film_id"
+          in: "path"
+          description: "Film ID (1-6)"
+          required: true
+          type: "integer"
+        - name: "sort_by"
+          in: "query"
+          description: "Field to sort by"
+          type: "string"
+        - name: "sort_order"
+          in: "query"
+          description: "Sort order (asc or desc)"
+          type: "string"
+          default: "asc"
+      responses:
+        200:
+          description: "Successful query"
+        400:
+          description: "Bad request"
+        404:
+          description: "Film not found"
+      x-google-backend:
+        address: "https://us-central1-project-8f091ae7-8a3a-4e14-a6e.cloudfunctions.net/starwars-function"
+        disable_auth: true
