@@ -3,7 +3,7 @@ info:
   title: "Star Wars API"
   version: "1.0.0"
   description: "REST API for Star Wars data (SWAPI integration)"
-host: "starwars-gateway-xxxxx.cloud.goog"
+host: "starwars-gateway-xxxxx.cloud.goog"  # Replace with your gateway domain
 schemes:
   - "https"
 paths:
@@ -38,15 +38,36 @@ paths:
           in: "query"
           description: "Items per page"
           type: "integer"
+        - name: "limit"
+          in: "query"
+          description: "Max results returned (if no pagination)"
+          type: "integer"
+        - name: "X-API-KEY"
+          in: "header"
+          description: "API Key (if required)"
+          type: "string"
       responses:
         200:
           description: "Successful search"
+          schema:
+            type: "object"
+            properties:
+              count:
+                type: "integer"
+              page:
+                type: "integer"
+              page_size:
+                type: "integer"
+              results:
+                type: "array"
+                items:
+                  type: "object"
         400:
           description: "Bad request"
         401:
           description: "Unauthorized"
       x-google-backend:
-        address: "https://us-central1-project-8f091ae7-8a3a-4e14-a6e.cloudfunctions.net/starwars-function"
+        address: "https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/starwars-function"
         disable_auth: true
 
   /v1/films/{film_id}/characters:
@@ -68,13 +89,34 @@ paths:
           description: "Sort order (asc or desc)"
           type: "string"
           default: "asc"
+        - name: "X-API-KEY"
+          in: "header"
+          description: "API Key (if required)"
+          type: "string"
       responses:
         200:
           description: "Successful query"
+          schema:
+            type: "object"
+            properties:
+              film:
+                type: "string"
+              characters:
+                type: "array"
+                items:
+                  type: "object"
         400:
           description: "Bad request"
+        401:
+          description: "Unauthorized"
         404:
           description: "Film not found"
       x-google-backend:
-        address: "https://us-central1-project-8f091ae7-8a3a-4e14-a6e.cloudfunctions.net/starwars-function"
+        address: "https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/starwars-function"
         disable_auth: true
+
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "X-API-KEY"
+    in: "header"
