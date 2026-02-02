@@ -1,0 +1,67 @@
+swagger: "2.0"
+info:
+  title: "Star Wars API"
+  version: "1.0.0"
+host: "starwars-gateway-ap42kvnt.uc.gateway.dev"
+basePath: "/"
+schemes:
+  - "https"
+paths:
+  /v1/search:
+    get:
+      summary: "Search Star Wars resources"
+      operationId: "search"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "resource"
+          in: "query"
+          required: true
+          type: "string"
+        - name: "name"
+          in: "query"
+          type: "string"
+        - name: "sort_by"
+          in: "query"
+          type: "string"
+        - name: "sort_order"
+          in: "query"
+          type: "string"
+        - name: "page"
+          in: "query"
+          type: "integer"
+        - name: "page_size"
+          in: "query"
+          type: "integer"
+      responses:
+        200:
+          description: "Success"
+      x-google-backend:
+        address: "https://us-central1-project-8f091ae7-8a3a-4e14-a6e.cloudfunctions.net/starwars-function"
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
+
+  /v1/films/{film_id}/characters:
+    get:
+      summary: "Get characters from a film"
+      operationId: "filmCharacters"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "film_id"
+          in: "path"
+          required: true
+          type: "integer"
+        - name: "sort_by"
+          in: "query"
+          type: "string"
+        - name: "sort_order"
+          in: "query"
+          type: "string"
+      responses:
+        200:
+          description: "Success"
+      x-google-backend:
+        address: "https://us-central1-project-8f091ae7-8a3a-4e14-a6e.cloudfunctions.net/starwars-function"
+        path_translation: APPEND_PATH_TO_ADDRESS
+        disable_auth: true
